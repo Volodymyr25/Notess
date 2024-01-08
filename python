@@ -1,6 +1,6 @@
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QButtonGroup, QLineEdit, QGroupBox, QListWidget,QTextEdit ,QLabel, QApplication, QWidget, QInputDialog, QPushButton, QVBoxLayout, QRadioButton, QHBoxLayout, QMessageBox, QSpinBox
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QButtonGroup, QLineEdit, QGroupBox, QListWidget,QTextEdit ,QLabel, QApplication, QWidget, QInputDialog, QPushButton, QVBoxLayout, QRadioButton, QHBoxLayout, QMessageBox, QSpinBox
 import json 
 
 app = QApplication([])
@@ -85,6 +85,14 @@ layout_notes.addLayout(col_2)
 
 notes_window.setLayout(layout_notes)
 
+def show_note():
+    key = list_notes.selectedItems()[0].text()
+    print(key)
+    fiend_text.setText(notes[key]["текст"])
+    list_tags.clear()
+    list_tags.addItems(notes[key]["теги"])
+
+
 def add_tag():
     if list_notes.selectedItems():
         key = list_notes.selectedItems()[0].text()
@@ -144,8 +152,6 @@ def del_note():
     else:
         print("Замітка для вилучення не обрана!")
 
-
-
 btn_note_create.clicked.connect(add_note) 
 
 btn_note_del.clicked.connect(del_note)
@@ -157,6 +163,12 @@ btn_teg_search.clicked.connect(search_tag)
 btn_teg_add.clicked.connect(add_tag)
 
 btn_teg_del.clicked.connect(del_tag)
+
+list_notes.itemClicked.connect(show_note)
+
+with open("notes_data.json", "r") as file:
+    notes = json.load(file)
+list_notes.addItems(notes)
 
 notes_window.show()
 app.exec_()
